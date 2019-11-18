@@ -16,30 +16,34 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    connect(ui->horizontalSlider, &QSlider::valueChanged, device, &Device::setThrottle);
-    connect(ui->horizontalSlider, &QSlider::valueChanged, [&](int value) {
-        ui->label_3->setText(QString::number(value));
-        device->setThrottle(value);
-    });
-
     connect(&portScanner, &PortScanner::scanUpdate, this, &MainWindow::onPortScanFinished);
     portScanner.startScanning(500);
 
-    for (uint8_t i = 0; i < 20; i++) {
-        ui->customPlot->addGraph()->setVisible(false);
+    // temperatures
+    for (uint8_t i = 0; i < 3; i++) {
+        ui->customPlot->addGraph();
         // random color for each plot
         ui->customPlot->graph(i)->setPen(QColor(QRandomGenerator::global()->bounded(50,255), QRandomGenerator::global()->bounded(50, 255), QRandomGenerator::global()->bounded(50,255)));
     }
 
-    ui->customPlot->yAxis2->setVisible(true);
-}
+    // current
+    ui->customPlot_1->addGraph();
+    // random color for each plot
+    ui->customPlot_1->graph(0)->setPen(QColor(QRandomGenerator::global()->bounded(50,255), QRandomGenerator::global()->bounded(50, 255), QRandomGenerator::global()->bounded(50,255)));
+    
+    // voltage
+    ui->customPlot_2->addGraph();
+    // random color for each plot
+    ui->customPlot_2->graph(0)->setPen(QColor(QRandomGenerator::global()->bounded(50,255), QRandomGenerator::global()->bounded(50, 255), QRandomGenerator::global()->bounded(50,255)));
 
-void MainWindow::onPlotEnabledChanged(int index) {
-    if (device->registerList[index].plotEnabled) {
-        ui->customPlot->graph(index)->setVisible(true);
-    } else {
-        ui->customPlot->graph(index)->setVisible(false);
+    // cell voltages
+    for (uint8_t i = 0; i < 8; i++) {
+        ui->customPlot_3->addGraph()->setVisible(false);
+        // random color for each plot
+        ui->customPlot_3->graph(i)->setPen(QColor(QRandomGenerator::global()->bounded(50,255), QRandomGenerator::global()->bounded(50, 255), QRandomGenerator::global()->bounded(50,255)));
     }
+
+    connect(&replotTimer, &Timer::timeout, this, &MainWindow::replot);
 }
 
 MainWindow::~MainWindow()
@@ -49,7 +53,6 @@ MainWindow::~MainWindow()
         delete device;
     }
 }
-
 
 void MainWindow::on_serialConnectButton_clicked()
 {
@@ -64,15 +67,10 @@ void MainWindow::on_serialConnectButton_clicked()
                     connect(&device->registerModel, &RegisterModel::plotEnabledChanged, this, &MainWindow::onPlotEnabledChanged);
 
                     if (device->open()) {
-                        ui->label->setText(availablePort.portName());
+                        ui->label->setText(QString("connected to %1").arg(availablePort.portName()));
                         ui->serialConnectButton->setText("disconnect");
                         device->requestDeviceInformation();
-                        replotTimer.start(40);
-                        ui->tableView->setModel(device->getRegisterModel());
-//                        device->readRegisters();
-                        device->readRegisterMulti(0x0, 22);
-
-
+                        replotTimer.start(30);
                         connectState = DISCONNECT;
                     }
                 }
@@ -89,6 +87,7 @@ void MainWindow::on_serialConnectButton_clicked()
 
 void MainWindow::deviceClosed()
 {
+    replotTimer.stop();
     if (device) {
         delete(device);
         device = nullptr;
@@ -99,43 +98,43 @@ void MainWindow::deviceClosed()
     connectState = CONNECT;
 }
 
-void MainWindow::readDeviceRegisters()
+void MainWindow::replot()
 {
-
-//    ui->tableView->setModel();
-}
-
-void MainWindow::handleNewDeviceData()
-{
-    ui->label->setText(QString::number(device->commutationFrequency));
-
     static QTime time(QTime::currentTime());
     // calculate two new data points:
     double key = time.elapsed()/1000.0; // time elapsed since start of demo, in seconds
-    static double lastPointKey = 0;
 
-            for (int i = 0; i < device->registerList.size(); i++) {
-                ui->customPlot->graph(i)->addData(key, device->deviceGlobal.adc_buffer[i]);
-            }
+    // TODO bug in openesc implementation, key not getting updated to limit rate
 
-            if (key-lastPointKey > 0.020) { // at most add point every 2 ms
+    // temperatures
+    ui->customPlot->graph(0)->addData(key, device->state.battery_temperature);
+    ui->customPlot->graph(1)->addData(key, device->state.cpu_temperature);
+    ui->customPlot->graph(2)->addData(key, device->state.board_temperature);
 
-                ui->customPlot->xAxis->setRange(key, 5, Qt::AlignRight);
+    ui->customPlot->xAxis->setRange(key, 5, Qt::AlignRight);
+    ui->customPlot->graph(i)->rescaleValueAxis(false, true);
 
-                bool first = true;
-                for (int i = 0;i < device->registerList.size(); i++) {
-                    if (device->registerList[i].plotEnabled) {
-                        if (first) {
-                            ui->customPlot->graph(i)->rescaleValueAxis(false, true);
-                            first = false;
-                        } else {
-                            ui->customPlot->graph(i)->rescaleValueAxis(true, true);
-                        }
-                    }
-                }
+    ui->customPlot_1->graph(0)->addData(key, device->state.battery_current);
+    ui->customPlot_1->xAxis->setRange(key, 5, Qt::AlignRight);
+    ui->customPlot_1->graph(0)->rescaleValueAxis(false, true);
 
-                ui->customPlot->replot();
-            }
+    ui->customPlot_2->graph(0)->addData(key, device->state.battery_voltage);
+    ui->customPlot_2->xAxis->setRange(key, 5, Qt::AlignRight);
+    ui->customPlot_2->graph(0)->rescaleValueAxis(false, true);
+
+    ui->customPlot_3->xAxis->setRange(key, 5, Qt::AlignRight);
+    ui->customPlot_3->graph(0)->rescaleValueAxis(false, true);
+    ui->customPlot_3->graph(0)->addData(key, device->state.cell_voltages[0]);
+
+    for (uint8_t i = 1; i < 8; i++) {
+        ui->customPlot_3->graph(i)->addData(key, device->state.cell_voltages[i]);
+        ui->customPlot_3->graph(i)->rescaleValueAxis(true, true);
+    }
+
+    ui->customPlot->replot();
+    ui->customPlot_1->replot();
+    ui->customPlot_2->replot();
+    ui->customPlot_3->replot();
 
 }
 

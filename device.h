@@ -8,8 +8,6 @@
 #include <QTimer>
 #include <QMap>
 
-#include <register-model.h>
-
 #include <inttypes.h>
 
 #define ADC_NUM_CHANNELS 8
@@ -22,54 +20,37 @@ public:
     ComParser parser;
     ComHandle* handle;
     bool open();
-    void readRegister(uint16_t address);
 
     typedef struct {
       uint16_t adc_buffer[ADC_NUM_CHANNELS];
-      uint16_t throttle;
-      uint8_t direction;
-      uint8_t direction_mode;
-      uint16_t startup_throttle;
-    } global_t;
+      uint16_t battery_voltage;
+      uint16_t battery_current;
+      uint16_t battery_temperature;
+      uint16_t cpu_temperature;
+      uint16_t board_temperature;
+      uint16_t cell_voltages[8];
+    } state_t;
 
-    global_t deviceGlobal;
-    void readRegisters();
-    void readRegisterMulti(uint16_t address, uint16_t count);
+    state_t state;
+    void requestState();
+
     void requestDeviceInformation();
     void requestProtocolVersion();
     void requestMessage(uint16_t messageId);
-    void setThrottle(uint16_t throttle);
-
-    void writeRegister(uint16_t address, uint32_t* data);
-    void writeRegisterMulti(uint16_t address, uint16_t length);
-
-    void readRegister(uint16_t address, uint32_t* data);
 
     void consumeData();
-
 
     uint8_t device_type;
     uint8_t device_id;
 
     void handleMessage(ping_message* message);
 
-    uint16_t phaseA, phaseB, phaseC, neutral, current, voltage, throttle, commutationFrequency;
-    void writeRegister(uint16_t address, uint32_t value);
-    void commitRegister(uint16_t index);
-
     void writeMessage(ping_message message);
-    RegisterModel* getRegisterModel() { return &registerModel; }
 
     void close();
-    QVector<RegisterModel::register_t> registerList;
-    RegisterModel registerModel;
 
 private:
-    uint16_t _throttle = 0;
     void write(uint8_t* data, uint16_t length);
-    QTimer sendThrottleTimer;
-
-
 
 signals:
     void newData();

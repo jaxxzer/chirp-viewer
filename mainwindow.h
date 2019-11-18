@@ -30,6 +30,8 @@ public:
     connect_e connectState;
     void deviceClosed();
 
+    void replot();
+
 private slots:
 //    void on_serialComboBox_activated(QString portName);
     void on_serialConnectButton_clicked();
@@ -42,11 +44,8 @@ private:
     PortScanner portScanner;
     Device* device;
 
-    QVector<double> x, phaseASamples, phaseBSamples, phaseCSamples;
     void handleNewDeviceData();
 
     QTimer replotTimer;
-
-    void readDeviceRegisters();
 };
 #endif // MAINWINDOW_H
