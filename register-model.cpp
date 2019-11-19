@@ -1,20 +1,25 @@
 #include <register-model.h>
+#include <device.h>
 
-
-RegisterModel::RegisterModel(QObject* parent, QVector<register_t>* _registerList, uint8_t* data)
+RegisterModel::RegisterModel(QObject* parent, Device* _device)
     : QAbstractTableModel(parent)
-    , registerList(_registerList)
-    , _data(data)
+    , device(_device)
 {
+    registerList.append({"Battery Temperature", RegisterModel::REG_TYPE_UINT16, RegisterModel::REG_MODE_READONLY, false, &Device::battery_temperature });
+    registerList.append({"Battery Current", RegisterModel::REG_TYPE_UINT16, RegisterModel::REG_MODE_READONLY, false, &Device::battery_current });
+    registerList.append({"Battery Voltage", RegisterModel::REG_TYPE_UINT16, RegisterModel::REG_MODE_READONLY, false, &Device::battery_voltage });
+    registerList.append({"Cell0", RegisterModel::REG_TYPE_UINT16, RegisterModel::REG_MODE_READONLY, false, &Device::cell0 });
+    registerList.append({"Cell1", RegisterModel::REG_TYPE_UINT16, RegisterModel::REG_MODE_READONLY, false, &Device::cell1 });
+    registerList.append({"Cell2", RegisterModel::REG_TYPE_UINT16, RegisterModel::REG_MODE_READONLY, false, &Device::cell2 });
+    registerList.append({"Cell3", RegisterModel::REG_TYPE_UINT16, RegisterModel::REG_MODE_READONLY, false, &Device::cell3 });
+    registerList.append({"Cell4", RegisterModel::REG_TYPE_UINT16, RegisterModel::REG_MODE_READONLY, false, &Device::cell4 });
+    registerList.append({"Cell5", RegisterModel::REG_TYPE_UINT16, RegisterModel::REG_MODE_READONLY, false, &Device::cell5 });
 }
-
 
 int RegisterModel::rowCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent)
-    if (registerList) {
-        return registerList->size();
-    }
+    return registerList.size();
     return 0;
 }
 
@@ -28,28 +33,16 @@ QVariant RegisterModel::data(const QModelIndex &index, int role) const
 {
     if (role == Qt::DisplayRole) {
         switch (index.column()) {
-        case 0:
-            return QString("0x") + QString::number((*registerList)[index.row()].address, 16);
         case 1:
-            switch ((*registerList)[index.row()].type) {
-            case REG_TYPE_BOOL:
-                return (bool&)_data[(*registerList)[index.row()].address];
-            case REG_TYPE_UINT8:
-                return (uint8_t&)_data[(*registerList)[index.row()].address];
-            case REG_TYPE_UINT16:
-                return (uint16_t&)_data[(*registerList)[index.row()].address];
-            case REG_TYPE_UINT32:
-                return (uint32_t&)_data[(*registerList)[index.row()].address];
-            }
-            break;
-        case 2:
-            return (*registerList)[index.row()].name;
+            return (device->*registerList[index.row()].data)();
+        case 0:
+            return registerList[index.row()].name;
         default:
             break;
         }
     } else if (role == Qt::CheckStateRole) {
-        if (index.column() == 3) {
-            if ((*registerList)[index.row()].plotEnabled) {
+        if (index.column() == 2) {
+            if (registerList[index.row()].plotEnabled) {
                 return Qt::Checked;
             } else {
                 return Qt::Unchecked;
@@ -64,7 +57,7 @@ Qt::ItemFlags RegisterModel::flags(const QModelIndex &index) const
     if (index.column() == 3) {
         return Qt::ItemIsUserCheckable | QAbstractItemModel::flags(index);
     }
-    if (index.column() == 1 && (*registerList)[index.row()].mode == REG_MODE_READWRITE) {
+    if (index.column() == 1 && registerList[index.row()].mode == REG_MODE_READWRITE) {
         return Qt::ItemIsEditable | QAbstractItemModel::flags(index);
     }
 
@@ -74,45 +67,11 @@ Qt::ItemFlags RegisterModel::flags(const QModelIndex &index) const
 bool RegisterModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     if ((role == Qt::EditRole) && (index.column() == 1)) {
-        if ((*registerList)[index.row()].mode == REG_MODE_READONLY) {
+        if (registerList[index.row()].mode == REG_MODE_READONLY) {
             return false;
         }
-        switch ((*registerList)[index.row()].type) {
-        case REG_TYPE_BOOL:
-            if (((bool*)_data)[(*registerList)[index.row()].address] == value.toBool()) {
-                return false;
-            }
-            ((bool*)_data)[(*registerList)[index.row()].address] = value.toBool();
-            emit registerEdited(index.row());
-
-            return true;
-        case REG_TYPE_UINT8:
-            if (((uint8_t*)_data)[(*registerList)[index.row()].address] == value.toInt()) {
-                return false;
-            }
-            ((uint8_t*)_data)[(*registerList)[index.row()].address] = value.toInt();
-            emit registerEdited(index.row());
-
-            return true;
-        case REG_TYPE_UINT16:
-            if ((uint16_t&)_data[(*registerList)[index.row()].address] == value.toInt()) {
-                return false;
-            }
-            (uint16_t&)_data[(*registerList)[index.row()].address] = value.toInt();
-            emit registerEdited(index.row());
-
-            return true;
-        case REG_TYPE_UINT32:
-            if ((uint32_t&)_data[(*registerList)[index.row()].address] == value.toInt()) {
-                return false;
-            }
-            (uint32_t&)_data[(*registerList)[index.row()].address] = value.toInt();
-            emit registerEdited(index.row());
-
-            return true;
-        }
     } else if ((role == Qt::CheckStateRole) && (index.column() == 3)) {
-        (*registerList)[index.row()].plotEnabled = value.toBool();
+        registerList[index.row()].plotEnabled = value.toBool();
         emit plotEnabledChanged(index.row());
         return true;
     }

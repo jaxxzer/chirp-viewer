@@ -69,6 +69,8 @@ void MainWindow::on_serialConnectButton_clicked()
                         ui->serialConnectButton->setText("disconnect");
                         device->requestDeviceInformation();
                         replotTimer.start(30);
+                        ui->tableView->setModel(&device->registerModel);
+
                         connectState = DISCONNECT;
                     }
                 }
@@ -132,12 +134,12 @@ void MainWindow::replot()
         qDebug() << "cell" << i << device->state.cell_voltages[i];
     }
 
-
     ui->customPlot->replot();
     ui->customPlot_2->replot();
     ui->customPlot_3->replot();
     ui->customPlot_4->replot();
 
+    device->registerModel.refreshAll();
 }
 
 void MainWindow::onPortScanFinished(QList<QSerialPortInfo> availablePorts)

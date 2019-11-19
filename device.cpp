@@ -10,12 +10,21 @@
 
 
 Device::Device(QSerialPortInfo info)
+    : registerModel(this, this)
 {
 
     handle = new ComHandle(info);
     connect(handle->serialPort, &QSerialPort::readyRead, this, &Device::consumeData);
 
     connect(handle, &ComHandle::closed, this, &Device::closed);
+
+//    RegisterModel::register_t a = {"Battery Temperature", RegisterModel::REG_TYPE_UINT16, RegisterModel::REG_MODE_READONLY, false, &Device::battery_temperature };
+//    registerList.append(a);
+//    registerList.append({"Battery Temperature", RegisterModel::REG_TYPE_UINT16, RegisterModel::REG_MODE_READONLY, false, &Device::battery_temperature });
+//  //  registerList.append({"Battery Current", RegisterModel::REG_TYPE_UINT16, RegisterModel::REG_MODE_READONLY, false});
+//    //registerList.append({"Battery Voltage", RegisterModel::REG_TYPE_UINT16, RegisterModel::REG_MODE_READONLY, false});
+////    registerList.append({"Cell1", RegisterModel::REG_TYPE_UINT16, RegisterModel::REG_MODE_READONLY, false});
+////    registerList.append({"Cell2", RegisterModel::REG_TYPE_UINT16, RegisterModel::REG_MODE_READONLY, false, ([]() { return state.cell_voltages[0]; }) });
 }
 
 bool Device::open()
