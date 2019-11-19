@@ -4,7 +4,7 @@
 #include <register-model.h>
 
 #include <QRandomGenerator>
-
+#include <QDebug>
 #include <qcustomplot.h>
 
 MainWindow::MainWindow(QWidget *parent)
@@ -27,23 +27,23 @@ MainWindow::MainWindow(QWidget *parent)
     }
 
     // current
-    ui->customPlot_1->addGraph();
-    // random color for each plot
-    ui->customPlot_1->graph(0)->setPen(QColor(QRandomGenerator::global()->bounded(50,255), QRandomGenerator::global()->bounded(50, 255), QRandomGenerator::global()->bounded(50,255)));
-    
-    // voltage
     ui->customPlot_2->addGraph();
     // random color for each plot
     ui->customPlot_2->graph(0)->setPen(QColor(QRandomGenerator::global()->bounded(50,255), QRandomGenerator::global()->bounded(50, 255), QRandomGenerator::global()->bounded(50,255)));
+    
+    // voltage
+    ui->customPlot_3->addGraph();
+    // random color for each plot
+    ui->customPlot_3->graph(0)->setPen(QColor(QRandomGenerator::global()->bounded(50,255), QRandomGenerator::global()->bounded(50, 255), QRandomGenerator::global()->bounded(50,255)));
 
     // cell voltages
-    for (uint8_t i = 0; i < 8; i++) {
-        ui->customPlot_3->addGraph()->setVisible(false);
+    for (uint8_t i = 0; i < 6; i++) {
+        ui->customPlot_4->addGraph();
         // random color for each plot
-        ui->customPlot_3->graph(i)->setPen(QColor(QRandomGenerator::global()->bounded(50,255), QRandomGenerator::global()->bounded(50, 255), QRandomGenerator::global()->bounded(50,255)));
+        ui->customPlot_4->graph(i)->setPen(QColor(QRandomGenerator::global()->bounded(50,255), QRandomGenerator::global()->bounded(50, 255), QRandomGenerator::global()->bounded(50,255)));
     }
 
-    connect(&replotTimer, &Timer::timeout, this, &MainWindow::replot);
+    connect(&replotTimer, &QTimer::timeout, this, &MainWindow::replot);
 }
 
 MainWindow::~MainWindow()
@@ -62,9 +62,7 @@ void MainWindow::on_serialConnectButton_clicked()
                 if (!device) {
                     portScanner.stopScanning();
                     device = new Device(availablePort);
-                    connect(device, &Device::newData, this, &MainWindow::handleNewDeviceData);
                     connect(device, &Device::closed, this, &MainWindow::deviceClosed);
-                    connect(&device->registerModel, &RegisterModel::plotEnabledChanged, this, &MainWindow::onPlotEnabledChanged);
 
                     if (device->open()) {
                         ui->label->setText(QString("connected to %1").arg(availablePort.portName()));
@@ -109,32 +107,36 @@ void MainWindow::replot()
     // temperatures
     ui->customPlot->graph(0)->addData(key, device->state.battery_temperature);
     ui->customPlot->graph(1)->addData(key, device->state.cpu_temperature);
-    ui->customPlot->graph(2)->addData(key, device->state.board_temperature);
+//    ui->customPlot->graph(2)->addData(key, device->state.board_temperature);
 
     ui->customPlot->xAxis->setRange(key, 5, Qt::AlignRight);
-    ui->customPlot->graph(i)->rescaleValueAxis(false, true);
+    ui->customPlot->graph(0)->rescaleValueAxis(false, true);
+    ui->customPlot->graph(1)->rescaleValueAxis(true, true);
+//    ui->customPlot->graph(2)->rescaleValueAxis(true, true);
 
-    ui->customPlot_1->graph(0)->addData(key, device->state.battery_current);
-    ui->customPlot_1->xAxis->setRange(key, 5, Qt::AlignRight);
-    ui->customPlot_1->graph(0)->rescaleValueAxis(false, true);
-
-    ui->customPlot_2->graph(0)->addData(key, device->state.battery_voltage);
+    ui->customPlot_2->graph(0)->addData(key, device->state.battery_current);
     ui->customPlot_2->xAxis->setRange(key, 5, Qt::AlignRight);
     ui->customPlot_2->graph(0)->rescaleValueAxis(false, true);
 
+    ui->customPlot_3->graph(0)->addData(key, device->state.battery_voltage);
     ui->customPlot_3->xAxis->setRange(key, 5, Qt::AlignRight);
     ui->customPlot_3->graph(0)->rescaleValueAxis(false, true);
-    ui->customPlot_3->graph(0)->addData(key, device->state.cell_voltages[0]);
 
-    for (uint8_t i = 1; i < 8; i++) {
-        ui->customPlot_3->graph(i)->addData(key, device->state.cell_voltages[i]);
-        ui->customPlot_3->graph(i)->rescaleValueAxis(true, true);
+    ui->customPlot_4->xAxis->setRange(key, 5, Qt::AlignRight);
+    ui->customPlot_4->graph(0)->rescaleValueAxis(false, true);
+    ui->customPlot_4->graph(0)->addData(key, device->state.cell_voltages[0]);
+
+    for (uint8_t i = 1; i < 4; i++) {
+        ui->customPlot_4->graph(i)->addData(key, device->state.cell_voltages[i]);
+        ui->customPlot_4->graph(i)->rescaleValueAxis(true, true);
+        qDebug() << "cell" << i << device->state.cell_voltages[i];
     }
 
+
     ui->customPlot->replot();
-    ui->customPlot_1->replot();
     ui->customPlot_2->replot();
     ui->customPlot_3->replot();
+    ui->customPlot_4->replot();
 
 }
 

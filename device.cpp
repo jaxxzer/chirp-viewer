@@ -10,7 +10,6 @@
 
 
 Device::Device(QSerialPortInfo info)
-    : registerModel(this, &registerList, (uint8_t*)&deviceGlobal)
 {
 
     handle = new ComHandle(info);
@@ -87,7 +86,7 @@ void Device::handleMessage(ping_message* message)
         device_id = message->source_device_id();
         device_type = ((common_device_information*)message)->device_type();
         break;
-    case Bluebps::STATE:
+    case BluebpsId::STATE:
     {
 
         bluebps_state* msg = (bluebps_state*)message;
@@ -95,8 +94,8 @@ void Device::handleMessage(ping_message* message)
         state.battery_current = msg->battery_current();
         state.battery_temperature = msg->battery_temperature();
         state.cpu_temperature = msg->cpu_temperature();
-        for (uint8_t i = 0; i < state.cell_voltages_legnth(); i++) {
-            state.cell_voltages[i] = msg->cell_voltage()[i];
+        for (uint8_t i = 0; i < msg->cell_voltages_length(); i++) {
+            state.cell_voltages[i] = msg->cell_voltages()[i];
         }
         emit newData();
     }
