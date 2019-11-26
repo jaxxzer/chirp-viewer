@@ -22,21 +22,21 @@ script:
   - wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
   - chmod a+x linuxdeployqt-continuous-x86_64.AppImage
   - ./linuxdeployqt-continuous-x86_64.AppImage open-esc-qt -appimage -unsupported-allow-new-glibc -verbose=0
-  - mv open-esc-qt*.AppImage open-esc-qt.AppImage
+  - mv open-esc-qt*.AppImage blue-bps-qt.AppImage
   - cd ..
 
 before_deploy:
-  - git tag continuous-deployment -f
+  - git tag blue-bps-deploy -f
   - git remote set-url origin https://${GITHUB_TOKEN}@github.com/jaxxzer/open-esc-qt
-  - git push origin continuous-deployment -f
+  - git push origin blue-bps-deploy -f
 
 deploy:
   provider: releases
   api_key: ${GITHUB_TOKEN}
   file_glob: true
   file:
-    - build/open-esc-qt.AppImage
+    - build/blue-bps-qt.AppImage
   overwrite: true
   skip_cleanup: true
   on:
-    branch: master
+    branch: bluebps
