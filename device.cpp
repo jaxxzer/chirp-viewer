@@ -95,22 +95,36 @@ void Device::handleMessage(ping_message* message)
         device_id = message->source_device_id();
         device_type = ((common_device_information*)message)->device_type();
         break;
-    case BluebpsId::STATE:
+    case OpenescId::STATE:
     {
 
-        bluebps_state* msg = (bluebps_state*)message;
-        state.battery_voltage = msg->battery_voltage();
-        state.battery_current = msg->battery_current();
-        state.battery_temperature = msg->battery_temperature();
-        state.cpu_temperature = msg->cpu_temperature();
-        for (uint8_t i = 0; i < msg->cell_voltages_length(); i++) {
-            state.cell_voltages[i] = msg->cell_voltages()[i];
-        }
-        emit newData();
+        openesc_state* msg = (openesc_state*)message;
+        phaseA = msg->phaseA();
+        phaseB = msg->phaseB();
+        phaseC = msg->phaseC();
+        neutral = msg->neutral();
+        throttle = msg->throttle();
+        voltage = msg->voltage();
+        current = msg->current();
+        commutationFrequency = msg->commutation_period();
+
     }
         break;
     default:
         break;
 
     }
+    //emit newData();
+
+}
+
+void Device::setThrottle(uint16_t throttle) {
+    if (throttle > 0xfff) {
+        throttle = 0xfff;
+    }
+    _throttle = throttle;
+    openesc_set_throttle m;
+    m.set_throttle_signal(_throttle);
+    m.updateChecksum();
+    writeMessage(m);
 }
