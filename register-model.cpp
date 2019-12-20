@@ -5,15 +5,18 @@ RegisterModel::RegisterModel(QObject* parent, Device* _device)
     : QAbstractTableModel(parent)
     , device(_device)
 {
-    registerList.append({"Battery Temperature", RegisterModel::REG_TYPE_UINT16, RegisterModel::REG_MODE_READONLY, false, &Device::battery_temperature });
-    registerList.append({"Battery Current", RegisterModel::REG_TYPE_UINT16, RegisterModel::REG_MODE_READONLY, false, &Device::battery_current });
-    registerList.append({"Battery Voltage", RegisterModel::REG_TYPE_UINT16, RegisterModel::REG_MODE_READONLY, false, &Device::battery_voltage });
-    registerList.append({"Cell0", RegisterModel::REG_TYPE_UINT16, RegisterModel::REG_MODE_READONLY, false, &Device::cell0 });
-    registerList.append({"Cell1", RegisterModel::REG_TYPE_UINT16, RegisterModel::REG_MODE_READONLY, false, &Device::cell1 });
-    registerList.append({"Cell2", RegisterModel::REG_TYPE_UINT16, RegisterModel::REG_MODE_READONLY, false, &Device::cell2 });
-    registerList.append({"Cell3", RegisterModel::REG_TYPE_UINT16, RegisterModel::REG_MODE_READONLY, false, &Device::cell3 });
-    registerList.append({"Cell4", RegisterModel::REG_TYPE_UINT16, RegisterModel::REG_MODE_READONLY, false, &Device::cell4 });
-    registerList.append({"Cell5", RegisterModel::REG_TYPE_UINT16, RegisterModel::REG_MODE_READONLY, false, &Device::cell5 });
+    registerList.append({"adc0", RegisterModel::REG_TYPE_UINT16, RegisterModel::REG_MODE_READONLY, false, &Device::getAdc0 });
+    registerList.append({"adc1", RegisterModel::REG_TYPE_UINT16, RegisterModel::REG_MODE_READONLY, false, &Device::getAdc1 });
+    registerList.append({"adc2", RegisterModel::REG_TYPE_UINT16, RegisterModel::REG_MODE_READONLY, false, &Device::getAdc2 });
+    registerList.append({"adc3", RegisterModel::REG_TYPE_UINT16, RegisterModel::REG_MODE_READONLY, false, &Device::getAdc3 });
+    registerList.append({"adc4", RegisterModel::REG_TYPE_UINT16, RegisterModel::REG_MODE_READONLY, false, &Device::getAdc4 });
+    registerList.append({"adc5", RegisterModel::REG_TYPE_UINT16, RegisterModel::REG_MODE_READONLY, false, &Device::getAdc5 });
+    registerList.append({"adc6", RegisterModel::REG_TYPE_UINT16, RegisterModel::REG_MODE_READONLY, false, &Device::getAdc6 });
+    registerList.append({"adc7", RegisterModel::REG_TYPE_UINT16, RegisterModel::REG_MODE_READONLY, false, &Device::getAdc7 });
+    registerList.append({"throttle", RegisterModel::REG_TYPE_UINT16, RegisterModel::REG_MODE_READONLY, false, &Device::getThrottle });
+    registerList.append({"startupThrottle", RegisterModel::REG_TYPE_UINT16, RegisterModel::REG_MODE_READONLY, false, &Device::getStartupThrottle });
+    registerList.append({"directionMode", RegisterModel::REG_TYPE_UINT16, RegisterModel::REG_MODE_READONLY, false, &Device::getDirectionMode });
+    registerList.append({"direction", RegisterModel::REG_TYPE_UINT16, RegisterModel::REG_MODE_READONLY, false, &Device::getDirection });
 }
 
 int RegisterModel::rowCount(const QModelIndex& parent) const

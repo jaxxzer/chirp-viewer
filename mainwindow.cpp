@@ -68,11 +68,6 @@ void MainWindow::on_serialConnectButton_clicked()
                         device->requestDeviceInformation();
                         replotTimer.start(40);
                         ui->tableView->setModel(&device->registerModel);
-//                        device->readRegisters();
-                        device->readRegisterMulti(0x0, 22);
-
-    ui->label->setText(QString::number(device->commutationFrequency));
-
                         connectState = DISCONNECT;
                     }
                 }

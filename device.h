@@ -32,6 +32,20 @@ public:
     } global_t;
 
     global_t deviceGlobal;
+
+    QVariant getAdc0() { return deviceGlobal.adc_buffer[0]; }
+    QVariant getAdc1() { return deviceGlobal.adc_buffer[1]; }
+    QVariant getAdc2() { return deviceGlobal.adc_buffer[2]; }
+    QVariant getAdc3() { return deviceGlobal.adc_buffer[3]; }
+    QVariant getAdc4() { return deviceGlobal.adc_buffer[4]; }
+    QVariant getAdc5() { return deviceGlobal.adc_buffer[5]; }
+    QVariant getAdc6() { return deviceGlobal.adc_buffer[6]; }
+    QVariant getAdc7() { return deviceGlobal.adc_buffer[7]; }
+    QVariant getThrottle() { return deviceGlobal.throttle; }
+    QVariant getDirection() { return deviceGlobal.direction; }
+    QVariant getDirectionMode() { return deviceGlobal.direction_mode; }
+    QVariant getStartupThrottle() { return deviceGlobal.startup_throttle; }
+
     void readRegisters();
     void readRegisterMulti(uint16_t address, uint16_t count);
     void requestDeviceInformation();
