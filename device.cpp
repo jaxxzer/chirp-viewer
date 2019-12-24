@@ -19,7 +19,7 @@ Device::Device(QSerialPortInfo info)
     connect(handle, &ComHandle::closed, this, &Device::closed);
 
     connect(&updateTimer, &QTimer::timeout, this, &Device::sendThrottle);
-    updateTimer.start(10);
+    updateTimer.start(5);
 
 //    RegisterModel::register_t a = {"Battery Temperature", RegisterModel::REG_TYPE_UINT16, RegisterModel::REG_MODE_READONLY, false, &Device::battery_temperature };
 //    registerList.append(a);

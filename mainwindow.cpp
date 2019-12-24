@@ -67,7 +67,7 @@ void MainWindow::on_serialConnectButton_clicked()
                         ui->label->setText(availablePort.portName());
                         ui->serialConnectButton->setText("disconnect");
                         device->requestDeviceInformation();
-                        replotTimer.start(40);
+                        replotTimer.start(5);
                         ui->tableView->setModel(&device->registerModel);
                         connectState = DISCONNECT;
                     }
@@ -90,6 +90,7 @@ void MainWindow::deviceClosed()
         device = nullptr;
     }
 
+    replotTimer.stop();
     portScanner.startScanning();
     ui->serialConnectButton->setText("connect");
     connectState = CONNECT;

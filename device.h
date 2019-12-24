@@ -33,6 +33,8 @@ public:
       uint8_t direction;
       uint8_t direction_mode;
       uint16_t startup_throttle;
+      uint8_t commutationStep;
+      uint8_t bridgeStep;
     } global_t;
 
     global_t deviceGlobal;
@@ -53,9 +55,9 @@ public:
     QVariant getDirection() { return deviceGlobal.direction; }
     QVariant getDirectionMode() { return deviceGlobal.direction_mode; }
     QVariant getStartupThrottle() { return deviceGlobal.startup_throttle; }
+    QVariant getCommutationStep() { return deviceGlobal.commutationStep; }
+    QVariant getBridgeStep() { return deviceGlobal.bridgeStep; }
 
-    void readRegisters();
-    void readRegisterMulti(uint16_t address, uint16_t count);
     void requestDeviceInformation();
     void requestProtocolVersion();
     void requestMessage(uint16_t messageId);
@@ -76,16 +78,17 @@ public:
     void close();
     RegisterModel registerModel;
 
-
 private:
     void write(uint8_t* data, uint16_t length);
     QTimer updateTimer;
 
-
-
 signals:
     void newData();
     void closed();
+    void firmwareVersionChanged(QString& firmwareVersion);
+    void protocolVersionChanged(QString& protocolVersion);
+    void deviceIdChanged(QString& deviceId);
+    void hardwareRevisionChanged(QString& hardwareRevision);
 };
 
 #endif // DEVICE_H
