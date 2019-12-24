@@ -13,6 +13,10 @@ RegisterModel::RegisterModel(QObject* parent, Device* _device)
     registerList.append({"adc5", RegisterModel::REG_TYPE_UINT16, RegisterModel::REG_MODE_READONLY, false, &Device::getAdc5 });
     registerList.append({"adc6", RegisterModel::REG_TYPE_UINT16, RegisterModel::REG_MODE_READONLY, false, &Device::getAdc6 });
     registerList.append({"adc7", RegisterModel::REG_TYPE_UINT16, RegisterModel::REG_MODE_READONLY, false, &Device::getAdc7 });
+    registerList.append({"phaseA", RegisterModel::REG_TYPE_UINT16, RegisterModel::REG_MODE_READONLY, false, &Device::getPhaseA });
+    registerList.append({"phaseB", RegisterModel::REG_TYPE_UINT16, RegisterModel::REG_MODE_READONLY, false, &Device::getPhaseB });
+    registerList.append({"phaseC", RegisterModel::REG_TYPE_UINT16, RegisterModel::REG_MODE_READONLY, false, &Device::getPhaseC });
+    registerList.append({"PhaseNeutral", RegisterModel::REG_TYPE_UINT16, RegisterModel::REG_MODE_READONLY, false, &Device::getPhaseNeutral });
     registerList.append({"throttle", RegisterModel::REG_TYPE_UINT16, RegisterModel::REG_MODE_READONLY, false, &Device::getThrottle });
     registerList.append({"startupThrottle", RegisterModel::REG_TYPE_UINT16, RegisterModel::REG_MODE_READONLY, false, &Device::getStartupThrottle });
     registerList.append({"directionMode", RegisterModel::REG_TYPE_UINT16, RegisterModel::REG_MODE_READONLY, false, &Device::getDirectionMode });
@@ -29,7 +33,7 @@ int RegisterModel::rowCount(const QModelIndex& parent) const
 int RegisterModel::columnCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent)
-    return 4;
+    return 3;
 }
 
 QVariant RegisterModel::data(const QModelIndex &index, int role) const
@@ -57,7 +61,7 @@ QVariant RegisterModel::data(const QModelIndex &index, int role) const
 
 Qt::ItemFlags RegisterModel::flags(const QModelIndex &index) const
 {
-    if (index.column() == 3) {
+    if (index.column() == 2) {
         return Qt::ItemIsUserCheckable | QAbstractItemModel::flags(index);
     }
     if (index.column() == 1 && registerList[index.row()].mode == REG_MODE_READWRITE) {
@@ -73,7 +77,7 @@ bool RegisterModel::setData(const QModelIndex &index, const QVariant &value, int
         if (registerList[index.row()].mode == REG_MODE_READONLY) {
             return false;
         }
-    } else if ((role == Qt::CheckStateRole) && (index.column() == 3)) {
+    } else if ((role == Qt::CheckStateRole) && (index.column() == 2)) {
         registerList[index.row()].plotEnabled = value.toBool();
         emit plotEnabledChanged(index.row());
         return true;

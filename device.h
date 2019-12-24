@@ -25,6 +25,10 @@ public:
 
     typedef struct {
       uint16_t adc_buffer[ADC_NUM_CHANNELS];
+      uint16_t phaseA;
+      uint16_t phaseB;
+      uint16_t phaseC;
+      uint16_t phaseNeutral;
       uint16_t throttle;
       uint8_t direction;
       uint8_t direction_mode;
@@ -41,6 +45,10 @@ public:
     QVariant getAdc5() { return deviceGlobal.adc_buffer[5]; }
     QVariant getAdc6() { return deviceGlobal.adc_buffer[6]; }
     QVariant getAdc7() { return deviceGlobal.adc_buffer[7]; }
+    QVariant getPhaseA() { return deviceGlobal.phaseA; }
+    QVariant getPhaseB() { return deviceGlobal.phaseB; }
+    QVariant getPhaseC() { return deviceGlobal.phaseC; }
+    QVariant getPhaseNeutral() { return deviceGlobal.phaseNeutral; }
     QVariant getThrottle() { return deviceGlobal.throttle; }
     QVariant getDirection() { return deviceGlobal.direction; }
     QVariant getDirectionMode() { return deviceGlobal.direction_mode; }
@@ -52,7 +60,7 @@ public:
     void requestProtocolVersion();
     void requestMessage(uint16_t messageId);
     void setThrottle(uint16_t throttle);
-
+    void sendThrottle();
 
     void consumeData();
 
@@ -61,7 +69,7 @@ public:
 
     void handleMessage(ping_message* message);
 
-    uint16_t phaseA, phaseB, phaseC, neutral, current, voltage, throttle, commutationFrequency;
+    uint16_t phaseA, phaseB, phaseC, neutral, current, voltage, _throttle, commutationFrequency;
 
     void writeMessage(ping_message message);
 
@@ -70,9 +78,8 @@ public:
 
 
 private:
-    uint16_t _throttle = 0;
     void write(uint8_t* data, uint16_t length);
-    QTimer sendThrottleTimer;
+    QTimer updateTimer;
 
 
 

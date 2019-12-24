@@ -25,8 +25,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(&portScanner, &PortScanner::scanUpdate, this, &MainWindow::onPortScanFinished);
     portScanner.startScanning(500);
 
+    connect(&replotTimer, &QTimer::timeout, this, &MainWindow::replot);
     for (uint8_t i = 0; i < 20; i++) {
-        ui->customPlot->addGraph()->setVisible(false);
+        ui->customPlot->addGraph()->setVisible(true);
         // random color for each plot
         ui->customPlot->graph(i)->setPen(QColor(QRandomGenerator::global()->bounded(50,255), QRandomGenerator::global()->bounded(50, 255), QRandomGenerator::global()->bounded(50,255)));
     }
@@ -102,9 +103,11 @@ void MainWindow::replot()
 
     ui->customPlot->xAxis->setRange(key, 5, Qt::AlignRight);
 
-    for (int i = 0; i < device->registerModel.registerList.size(); i++) {
-        ui->customPlot->graph(i)->addData(key, device->deviceGlobal.adc_buffer[i]);
-    }
+    ui->customPlot->graph(8)->addData(key, device->deviceGlobal.phaseA);
+    ui->customPlot->graph(9)->addData(key, device->deviceGlobal.phaseB);
+    ui->customPlot->graph(10)->addData(key, device->deviceGlobal.phaseC);
+    ui->customPlot->graph(11)->addData(key, device->deviceGlobal.phaseNeutral);
+    ui->customPlot->graph(12)->addData(key, device->deviceGlobal.throttle);
 
     bool first = true;
     for (int i = 0;i < device->registerModel.registerList.size(); i++) {

@@ -18,6 +18,9 @@ Device::Device(QSerialPortInfo info)
 
     connect(handle, &ComHandle::closed, this, &Device::closed);
 
+    connect(&updateTimer, &QTimer::timeout, this, &Device::sendThrottle);
+    updateTimer.start(10);
+
 //    RegisterModel::register_t a = {"Battery Temperature", RegisterModel::REG_TYPE_UINT16, RegisterModel::REG_MODE_READONLY, false, &Device::battery_temperature };
 //    registerList.append(a);
 //    registerList.append({"Battery Temperature", RegisterModel::REG_TYPE_UINT16, RegisterModel::REG_MODE_READONLY, false, &Device::battery_temperature });
@@ -99,11 +102,11 @@ void Device::handleMessage(ping_message* message)
     {
 
         openesc_state* msg = (openesc_state*)message;
-        phaseA = msg->phaseA();
-        phaseB = msg->phaseB();
-        phaseC = msg->phaseC();
-        neutral = msg->neutral();
-        throttle = msg->throttle();
+        deviceGlobal.phaseA = msg->phaseA();
+        deviceGlobal.phaseB = msg->phaseB();
+        deviceGlobal.phaseC = msg->phaseC();
+        deviceGlobal.phaseNeutral = msg->neutral();
+        deviceGlobal.throttle = msg->throttle();
         voltage = msg->voltage();
         current = msg->current();
         commutationFrequency = msg->commutation_period();
@@ -118,13 +121,19 @@ void Device::handleMessage(ping_message* message)
 
 }
 
-void Device::setThrottle(uint16_t throttle) {
-    if (throttle > 0xfff) {
-        throttle = 0xfff;
-    }
-    _throttle = throttle;
+void Device::sendThrottle()
+{
     openesc_set_throttle m;
     m.set_throttle_signal(_throttle);
     m.updateChecksum();
     writeMessage(m);
+}
+void Device::setThrottle(uint16_t throttle) {
+    if (throttle > 0xfff) {
+        return;
+    }
+    _throttle = throttle;
+    sendThrottle();
+
+    requestMessage(OpenescId::STATE);
 }
