@@ -1,0 +1,183 @@
+{
+    "definition": "pingchirp",
+    "messages": {
+        "set": {},
+        "get": {
+            "vin": {
+                "id": "1202",
+                "description": "The input voltage.",
+                "payload": [
+                    {
+                        "name": "vin",
+                        "type": "u16",
+                        "description": "The input voltage",
+                        "units": "mV"
+                    }
+                ]
+            },
+            "processor_temperature": {
+                "id": "1213",
+                "description": "Temperature of the device cpu.",
+                "payload": [
+                    {
+                        "name": "processor_temperature",
+                        "type": "u16",
+                        "description": "The temperature in centi-degrees Centigrade (100 * degrees C).",
+                        "units": "cC"
+                    }
+                ]
+            },
+            "pcb_temperature": {
+                "id": "1214",
+                "description": "Temperature of the on-board thermistor.",
+                "payload": [
+                    {
+                        "name": "pcb_temperature",
+                        "type": "u16",
+                        "description": "The temperature in centi-degrees Centigrade (100 * degrees C).",
+                        "units": "cC"
+                    }
+                ]
+            },
+            "chirp_data": {
+                "id": "5000",
+                "description": "chirp results",
+                "payload": [
+                    {
+                        "name": "nsamples",
+                        "type": "u32",
+                        "description:": "maybe this should be parameter of transmit()"
+                    },
+                    {
+                        "name": "opamp1",
+                        "type": "u8",
+                        "description": "opamp1 gain: 2,4,8, or 16"
+                    },
+                    {
+                        "name": "opamp2",
+                        "type": "u8",
+                        "description": "opamp2 gain: 2,4,8, or 16"
+                    },
+                    {
+                        "name": "adc_resolution",
+                        "type": "u8",
+                        "description": "adc resolution - 8 bit or 12 bit"
+                    },
+                    {
+                        "name": "adc_sample_time",
+                        "type": "u8",
+                        "description": "adc sampling time per conversion"
+                    },
+                    {
+                        "name": "pulse_duration",
+                        "type": "u32",
+                        "description": "pulse duration in microseconds"
+                    },
+                    {
+                        "name": "fs",
+                        "type": "u32",
+                        "description": "sample frequency"
+                    },
+                    {
+                        "name": "f0",
+                        "type": "u32",
+                        "description": "instantaneous frequency at beginning of chirp"
+                    },
+                    {
+                        "name": "f1",
+                        "type": "u32",
+                        "description": "instantaneous frequency at end of chirp"
+                    },
+                    {
+                        "name": "waveform",
+                        "type": "u8",
+                        "description": "monotone, LFM, QFM..."
+                    },
+                    {
+                        "name": "filter",
+                        "type": "u8",
+                        "description": "goertzel, chirp, lpf, window..."
+                    },
+                    {
+                        "name": "data",
+                        "type": "vector",
+                        "vector": {
+                            "sizetype": "u16",
+                            "datatype": "u8",
+                            "size": "dynamic"
+                        },
+                        "description": "An array of return strength measurements taken at regular intervals across the scan region."
+                    }
+                ]
+            }
+        },
+        "control": {
+            "goto_bootloader": {
+                "id": "1100",
+                "description": "Send the device into the bootloader. This is useful for firmware updates.",
+                "payload": []
+            },
+            "transmit": {
+                "id": "8000",
+                "description": "send a pulse and take a measurement",
+                "payload": [
+                    {
+                        "name": "nsamples",
+                        "type": "u32",
+                        "description:": "maybe this should be parameter of transmit()"
+                    },
+                    {
+                        "name": "opamp1",
+                        "type": "u8",
+                        "description": "opamp1 gain: 2,4,8, or 16"
+                    },
+                    {
+                        "name": "opamp2",
+                        "type": "u8",
+                        "description": "opamp2 gain: 2,4,8, or 16"
+                    },
+                    {
+                        "name": "adc_resolution",
+                        "type": "u8",
+                        "description": "adc resolution - 8 bit or 12 bit"
+                    },
+                    {
+                        "name": "adc_sample_time",
+                        "type": "u8",
+                        "description": "adc sampling time per conversion"
+                    },
+                    {
+                        "name": "pulse_duration",
+                        "type": "u32",
+                        "description": "pulse duration in microseconds"
+                    },
+                    {
+                        "name": "fs",
+                        "type": "u32",
+                        "description": "sample frequency"
+                    },
+                    {
+                        "name": "f0",
+                        "type": "u32",
+                        "description": "instantaneous frequency at beginning of chirp"
+                    },
+                    {
+                        "name": "f1",
+                        "type": "u32",
+                        "description": "instantaneous frequency at end of chirp"
+                    },
+                    {
+                        "name": "waveform",
+                        "type": "u8",
+                        "description": "monotone, LFM, QFM..."
+                    },
+                    {
+                        "name": "filter",
+                        "type": "u8",
+                        "description": "goertzel, chirp, lpf, window..."
+                    }
+                ]
+            }
+        }
+    }
+}

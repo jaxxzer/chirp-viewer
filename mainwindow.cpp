@@ -14,7 +14,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     connect(&portScanner, &PortScanner::scanUpdate, this, &MainWindow::onPortScanFinished);
-    portScanner.startScanning(500);
+    portScanner.startScanning(5000);
 
     ui->customPlot->addGraph()->setVisible(true);
     ui->customPlot->graph()->setAdaptiveSampling(true);
@@ -42,7 +42,7 @@ void MainWindow::on_serialConnectButton_clicked()
                     if (device->open()) {
                         ui->label->setText(availablePort.portName());
                         ui->serialConnectButton->setText("disconnect");
-                        device->requestDeviceInformation();
+                        //device->requestDeviceInformation();
                         connectState = DISCONNECT;
                     }
                 }

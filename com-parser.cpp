@@ -3,6 +3,7 @@
 #include <ping-parser.h>
 
 ComParser::ComParser()
+    : parser(0xffff)
 {}
 
 ComParser::ParseState ComParser::parseByte(uint8_t b)

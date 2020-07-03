@@ -4,8 +4,7 @@
 #include <QSerialPort>
 #include <QDebug>
 #include <ping-message-common.h>
-#include <ping-message-bluebps.h>
-#include <ping-message-openesc.h>
+#include <ping-message-chirp.h>
 
 Device::Device(QSerialPortInfo info)
 {
@@ -71,7 +70,7 @@ void Device::handleMessage(ping_message* message)
         device_id = message->source_device_id();
         device_type = ((common_device_information*)message)->device_type();
         break;
-
+    case PingchirpId::CHIRP_DATA:
         break;
     default:
         break;
