@@ -36,14 +36,12 @@ private slots:
 //    void on_serialComboBox_activated(QString portName);
     void on_serialConnectButton_clicked();
     void onPortScanFinished(QList<QSerialPortInfo>);
-    void onPlotEnabledChanged(int index);
+    void plotProfile();
 
 private:
     Ui::MainWindow *ui;
 
     PortScanner portScanner;
     Device* device;
-
-    QTimer replotTimer;
 };
 #endif // MAINWINDOW_H

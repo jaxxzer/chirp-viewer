@@ -34,8 +34,6 @@ add_executable(open-esc-qt
     port-scanner.h
     qcustomplot.h
     qcustomplot.cpp
-    register-model.cpp
-    register-model.h
     ${PINGCPP_SRC}/message/ping-message-openesc.h
 )
 

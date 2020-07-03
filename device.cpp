@@ -6,28 +6,12 @@
 #include <ping-message-common.h>
 #include <ping-message-bluebps.h>
 #include <ping-message-openesc.h>
-#include <register-model.h>
-
 
 Device::Device(QSerialPortInfo info)
-    : registerModel(this, this)
 {
-
     handle = new ComHandle(info);
     connect(handle->serialPort, &QSerialPort::readyRead, this, &Device::consumeData);
-
     connect(handle, &ComHandle::closed, this, &Device::closed);
-
-    connect(&updateTimer, &QTimer::timeout, this, &Device::sendThrottle);
-    updateTimer.start(5);
-
-//    RegisterModel::register_t a = {"Battery Temperature", RegisterModel::REG_TYPE_UINT16, RegisterModel::REG_MODE_READONLY, false, &Device::battery_temperature };
-//    registerList.append(a);
-//    registerList.append({"Battery Temperature", RegisterModel::REG_TYPE_UINT16, RegisterModel::REG_MODE_READONLY, false, &Device::battery_temperature });
-//  //  registerList.append({"Battery Current", RegisterModel::REG_TYPE_UINT16, RegisterModel::REG_MODE_READONLY, false});
-//    //registerList.append({"Battery Voltage", RegisterModel::REG_TYPE_UINT16, RegisterModel::REG_MODE_READONLY, false});
-////    registerList.append({"Cell1", RegisterModel::REG_TYPE_UINT16, RegisterModel::REG_MODE_READONLY, false});
-////    registerList.append({"Cell2", RegisterModel::REG_TYPE_UINT16, RegisterModel::REG_MODE_READONLY, false, ([]() { return state.cell_voltages[0]; }) });
 }
 
 bool Device::open()
@@ -64,17 +48,6 @@ void Device::consumeData()
     for (auto b : data) {
         if (parser.parseByte(b) == ComParser::NEW_MESSAGE) {
             handleMessage(&parser.parser.rxMessage);
-            switch (parser.parser.rxMessage.message_id()) {
-            case CommonId::DEVICE_INFORMATION:
-
-                 device_type = ((common_device_information)parser.parser.rxMessage).device_type();
-                break;
-            default:
-                break;
-            }
-
-            device_id = parser.parser.rxMessage.source_device_id();
-            emit newData();
         }
     }
 }
@@ -98,20 +71,7 @@ void Device::handleMessage(ping_message* message)
         device_id = message->source_device_id();
         device_type = ((common_device_information*)message)->device_type();
         break;
-    case OpenescId::STATE:
-    {
 
-        openesc_state* msg = (openesc_state*)message;
-        deviceGlobal.phaseA = msg->phaseA();
-        deviceGlobal.phaseB = msg->phaseB();
-        deviceGlobal.phaseC = msg->phaseC();
-        deviceGlobal.phaseNeutral = msg->neutral();
-        deviceGlobal.throttle = msg->throttle();
-        voltage = msg->voltage();
-        current = msg->current();
-        commutationFrequency = msg->commutation_period();
-
-    }
         break;
     default:
         break;
@@ -119,21 +79,4 @@ void Device::handleMessage(ping_message* message)
     }
     //emit newData();
 
-}
-
-void Device::sendThrottle()
-{
-    openesc_set_throttle m;
-    m.set_throttle_signal(_throttle);
-    m.updateChecksum();
-    writeMessage(m);
-}
-void Device::setThrottle(uint16_t throttle) {
-    if (throttle > 0xfff) {
-        return;
-    }
-    _throttle = throttle;
-    sendThrottle();
-
-    requestMessage(OpenescId::STATE);
 }
