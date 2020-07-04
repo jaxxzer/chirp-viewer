@@ -145,13 +145,37 @@
             </item>
             <item>
              <widget class="QSlider" name="f0Slider">
+              <property name="minimum">
+               <number>90000</number>
+              </property>
+              <property name="maximum">
+               <number>140000</number>
+              </property>
+              <property name="singleStep">
+               <number>1000</number>
+              </property>
+              <property name="pageStep">
+               <number>1000</number>
+              </property>
+              <property name="value">
+               <number>90000</number>
+              </property>
+              <property name="tracking">
+               <bool>false</bool>
+              </property>
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="tickPosition">
+               <enum>QSlider::TicksAbove</enum>
+              </property>
+              <property name="tickInterval">
+               <number>1000</number>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_9">
+             <widget class="QLabel" name="f0Label">
               <property name="text">
                <string>f0</string>
               </property>
@@ -170,13 +194,34 @@
             </item>
             <item>
              <widget class="QSlider" name="f1Slider">
+              <property name="minimum">
+               <number>110000</number>
+              </property>
+              <property name="maximum">
+               <number>160000</number>
+              </property>
+              <property name="singleStep">
+               <number>1000</number>
+              </property>
+              <property name="pageStep">
+               <number>1000</number>
+              </property>
+              <property name="tracking">
+               <bool>false</bool>
+              </property>
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="tickPosition">
+               <enum>QSlider::TicksAbove</enum>
+              </property>
+              <property name="tickInterval">
+               <number>1000</number>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_11">
+             <widget class="QLabel" name="f1Label">
               <property name="text">
                <string>f0</string>
               </property>
@@ -195,13 +240,31 @@
             </item>
             <item>
              <widget class="QSlider" name="pulseDurationSlider">
+              <property name="minimum">
+               <number>50</number>
+              </property>
+              <property name="maximum">
+               <number>900</number>
+              </property>
+              <property name="singleStep">
+               <number>1</number>
+              </property>
+              <property name="tracking">
+               <bool>false</bool>
+              </property>
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="tickPosition">
+               <enum>QSlider::TicksAbove</enum>
+              </property>
+              <property name="tickInterval">
+               <number>100</number>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_13">
+             <widget class="QLabel" name="pulseDurationLabel">
               <property name="text">
                <string>f0</string>
               </property>
@@ -317,8 +380,20 @@
             </item>
             <item>
              <widget class="QSlider" name="opamp1GainSlider">
+              <property name="maximum">
+               <number>3</number>
+              </property>
+              <property name="tracking">
+               <bool>false</bool>
+              </property>
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="tickPosition">
+               <enum>QSlider::TicksAbove</enum>
+              </property>
+              <property name="tickInterval">
+               <number>1</number>
               </property>
              </widget>
             </item>
@@ -342,8 +417,20 @@
             </item>
             <item>
              <widget class="QSlider" name="opamp2GainSlider">
+              <property name="maximum">
+               <number>3</number>
+              </property>
+              <property name="tracking">
+               <bool>false</bool>
+              </property>
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="tickPosition">
+               <enum>QSlider::TicksAbove</enum>
+              </property>
+              <property name="tickInterval">
+               <number>1</number>
               </property>
              </widget>
             </item>

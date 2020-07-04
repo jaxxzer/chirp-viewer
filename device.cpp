@@ -96,6 +96,11 @@ void Device::handleMessage(ping_message* message)
             keys[i] = i*Dn;
             data[i] = msg->data()[i];
         }
+        nsamples = msg->nsamples();
+        f0 = msg->f0();
+        f1 = msg->f1();
+        pulse_duration = msg->pulse_duration();
+
 
         emit newData(keys, data);
         break;

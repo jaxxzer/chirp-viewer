@@ -77,6 +77,14 @@ void MainWindow::plotProfile(QVector<double> keys, QVector<double> data)
 
     ui->customPlot->graph()->setData(keys, data, true);
     ui->customPlot->replot();
+//    ui->nsamplesSlider->setValue(device->nsamples);
+//    ui->f0Slider->setValue(device->f0);
+//    ui->f1Slider->setValue(device->f1);
+//    ui->pulseDurationSlider->setValue(device->pulse_duration);
+    ui->nsamplesLabel->setNum((int)device->nsamples);
+    ui->f0Label->setNum((int)device->f0);
+    ui->f1Label->setNum((int)device->f1);
+    ui->pulseDurationLabel->setNum(device->pulse_duration);
 }
 
 void MainWindow::onPortScanFinished(QList<QSerialPortInfo> availablePorts)
