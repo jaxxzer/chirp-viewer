@@ -37,6 +37,17 @@ private slots:
     void on_serialConnectButton_clicked();
     void onPortScanFinished(QList<QSerialPortInfo>);
     void plotProfile(QVector<double> keys, QVector<double> data);
+    void on_nsamplesSlider_valueChanged(int value);
+
+    void on_f0Slider_valueChanged(int value);
+
+    void on_f1Slider_valueChanged(int value);
+
+    void on_pulseDurationSlider_valueChanged(int value);
+
+    void on_opamp1GainSlider_valueChanged(int value);
+
+    void on_opamp2GainSlider_valueChanged(int value);
 
 private:
     Ui::MainWindow *ui;

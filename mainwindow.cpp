@@ -87,7 +87,32 @@ void MainWindow::onPortScanFinished(QList<QSerialPortInfo> availablePorts)
     }
 }
 
-void MainWindow::on_horizontalSlider_valueChanged(int value)
+void MainWindow::on_nsamplesSlider_valueChanged(int value)
 {
     device->setNSamples(value);
+}
+
+void MainWindow::on_f0Slider_valueChanged(int value)
+{
+    device->setF0(value);
+}
+
+void MainWindow::on_f1Slider_valueChanged(int value)
+{
+    device->setF1(value);
+}
+
+void MainWindow::on_pulseDurationSlider_valueChanged(int value)
+{
+    device->setPulseDuration(value);
+}
+
+void MainWindow::on_opamp1GainSlider_valueChanged(int value)
+{
+    device->setOpamp1Gain(value);
+}
+
+void MainWindow::on_opamp2GainSlider_valueChanged(int value)
+{
+    device->setOpamp2Gain(value);
 }

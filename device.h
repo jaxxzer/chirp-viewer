@@ -35,7 +35,12 @@ public:
     void close();
 
     void ping();
-    void setNSamples(int n);
+    void setNSamples(int n) { nsamples = n; ping(); }
+    void setPulseDuration(int n) { pulse_duration = n; ping(); };
+    void setOpamp1Gain(int n) { opamp1_gain = n; ping(); };
+    void setOpamp2Gain(int n) { opamp2_gain = n; ping(); };
+    void setF0(int n) { f0 = n; ping(); };
+    void setF1(int n) { f1 = n; ping(); };
 
     uint32_t cpu_frequency;
     uint32_t timer_frequency;

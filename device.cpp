@@ -68,13 +68,15 @@ void Device::ping()
 {
     pingchirp_transmit m;
     m.set_nsamples(nsamples);
+    m.set_pulse_duration(pulse_duration);
+    m.set_opamp1(opamp1_gain);
+    m.set_opamp2(opamp2_gain);
+    m.set_f0(f0);
+    m.set_f1(f1);
     m.updateChecksum();
     writeMessage(m);
 }
-void Device::setNSamples(int n)
-{
-    nsamples = n;
-}
+
 
 void Device::handleMessage(ping_message* message)
 {
@@ -88,14 +90,14 @@ void Device::handleMessage(ping_message* message)
         pingchirp_chirp_data* msg = (pingchirp_chirp_data*)message;
         QVector<double> keys(msg->data_length());
         float Ts = 1/300000.0;
+        float Dn = 343*Ts/2;
         QVector<double> data(msg->data_length());
         for (uint16_t i = 0; i < msg->data_length(); i++) {
-            keys[i] = i*Ts;
+            keys[i] = i*Dn;
             data[i] = msg->data()[i];
         }
 
         emit newData(keys, data);
-        ping();
         break;
     }
     default:
