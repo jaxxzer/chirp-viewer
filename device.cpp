@@ -100,7 +100,8 @@ void Device::handleMessage(ping_message* message)
         f0 = msg->f0();
         f1 = msg->f1();
         pulse_duration = msg->pulse_duration();
-
+        opamp1_gain = msg->opamp1();
+        opamp2_gain = msg->opamp2();
 
         emit newData(keys, data);
         break;

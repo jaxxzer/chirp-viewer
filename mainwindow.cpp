@@ -14,7 +14,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     connect(&portScanner, &PortScanner::scanUpdate, this, &MainWindow::onPortScanFinished);
-    portScanner.startScanning(5000);
+    portScanner.startScanning(500);
 
     ui->customPlot->addGraph()->setVisible(true);
     ui->customPlot->graph()->setAdaptiveSampling(true);
@@ -85,6 +85,9 @@ void MainWindow::plotProfile(QVector<double> keys, QVector<double> data)
     ui->f0Label->setNum((int)device->f0);
     ui->f1Label->setNum((int)device->f1);
     ui->pulseDurationLabel->setNum(device->pulse_duration);
+    ui->opamp1GainLabel->setNum(pow(2, device->opamp1_gain+1));
+    ui->opamp2GainLabel->setNum(pow(2, device->opamp2_gain+1));
+
 }
 
 void MainWindow::onPortScanFinished(QList<QSerialPortInfo> availablePorts)
