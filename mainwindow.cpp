@@ -86,3 +86,8 @@ void MainWindow::onPortScanFinished(QList<QSerialPortInfo> availablePorts)
         ui->serialComboBox->addItem(portInfo.portName());
     }
 }
+
+void MainWindow::on_horizontalSlider_valueChanged(int value)
+{
+    device->setNSamples(value);
+}

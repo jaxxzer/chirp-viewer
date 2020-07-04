@@ -64,6 +64,18 @@ void Device::write(uint8_t *data, uint16_t length)
     }
 }
 
+void Device::ping()
+{
+    pingchirp_transmit m;
+    m.set_nsamples(nsamples);
+    m.updateChecksum();
+    writeMessage(m);
+}
+void Device::setNSamples(int n)
+{
+    nsamples = n;
+}
+
 void Device::handleMessage(ping_message* message)
 {
     switch (message->message_id()) {
@@ -83,6 +95,7 @@ void Device::handleMessage(ping_message* message)
         }
 
         emit newData(keys, data);
+        ping();
         break;
     }
     default:

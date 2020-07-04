@@ -34,6 +34,9 @@ public:
 
     void close();
 
+    void ping();
+    void setNSamples(int n);
+
     uint32_t cpu_frequency;
     uint32_t timer_frequency;
     uint16_t duty;
