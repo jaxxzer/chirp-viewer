@@ -36,12 +36,13 @@ void MainWindow::on_serialConnectButton_clicked()
                 if (!device) {
                     portScanner.stopScanning();
                     device = new Device(availablePort);
-                    //connect(device, &Device::newData, this, &MainWindow::handleNewDeviceData);
+                    connect(device, &Device::newData, this, &MainWindow::plotProfile);
                     connect(device, &Device::closed, this, &MainWindow::deviceClosed);
 
                     if (device->open()) {
                         ui->label->setText(availablePort.portName());
                         ui->serialConnectButton->setText("disconnect");
+
                         //device->requestDeviceInformation();
                         connectState = DISCONNECT;
                     }
@@ -69,13 +70,13 @@ void MainWindow::deviceClosed()
     connectState = CONNECT;
 }
 
-void MainWindow::plotProfile()
+void MainWindow::plotProfile(QVector<double> keys, QVector<double> data)
 {
-//    ui->customPlot->xAxis->setRange(key, 5, Qt::AlignRight);
+    ui->customPlot->xAxis->setRange(0, keys.last());
+    ui->customPlot->yAxis->setRange(0, 255);
 
-//    ui->customPlot->graph()->setData(device->dataKeys, device->data);
-//    //ui->customPlot->graph(i)->rescaleValueAxis(false, true);
-//    ui->customPlot->replot();
+    ui->customPlot->graph()->setData(keys, data, true);
+    ui->customPlot->replot();
 }
 
 void MainWindow::onPortScanFinished(QList<QSerialPortInfo> availablePorts)

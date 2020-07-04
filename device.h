@@ -64,6 +64,7 @@ signals:
     void protocolVersionChanged(QString& protocolVersion);
     void deviceIdChanged(QString& deviceId);
     void hardwareRevisionChanged(QString& hardwareRevision);
+    void newData(QVector<double>, QVector<double>);
 };
 
 #endif // DEVICE_H

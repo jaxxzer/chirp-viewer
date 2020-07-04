@@ -3,6 +3,7 @@
 #include <QObject>
 #include <QSerialPort>
 #include <QDebug>
+#include <QVector>
 #include <ping-message-common.h>
 #include <ping-message-chirp.h>
 
@@ -71,7 +72,19 @@ void Device::handleMessage(ping_message* message)
         device_type = ((common_device_information*)message)->device_type();
         break;
     case PingchirpId::CHIRP_DATA:
+    {
+        pingchirp_chirp_data* msg = (pingchirp_chirp_data*)message;
+        QVector<double> keys(msg->data_length());
+        float Ts = 1/300000.0;
+        QVector<double> data(msg->data_length());
+        for (uint16_t i = 0; i < msg->data_length(); i++) {
+            keys[i] = i*Ts;
+            data[i] = msg->data()[i];
+        }
+
+        emit newData(keys, data);
         break;
+    }
     default:
         break;
 

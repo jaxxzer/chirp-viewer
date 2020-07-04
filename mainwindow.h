@@ -36,7 +36,7 @@ private slots:
 //    void on_serialComboBox_activated(QString portName);
     void on_serialConnectButton_clicked();
     void onPortScanFinished(QList<QSerialPortInfo>);
-    void plotProfile();
+    void plotProfile(QVector<double> keys, QVector<double> data);
 
 private:
     Ui::MainWindow *ui;
