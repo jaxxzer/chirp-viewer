@@ -18,7 +18,7 @@ script:
   - make -j$(nproc) || make fix-ui
   - make -j$(nproc)
   - export PATH=/opt/qt512/bin:$PATH
-  #- cp ../chirp-viewer.desktop .
+  - cp ../chirp-viewer.desktop .
   - wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
   - chmod a+x linuxdeployqt-continuous-x86_64.AppImage
   - ./linuxdeployqt-continuous-x86_64.AppImage chirp-viewer -appimage -unsupported-allow-new-glibc -verbose=0

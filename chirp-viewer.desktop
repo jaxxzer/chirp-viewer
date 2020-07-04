@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=chirp-viewer
+Exec=chirp-viewer
+Icon=default
+Terminal=false
+Categories=Qt;
