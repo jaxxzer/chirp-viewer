@@ -48,6 +48,8 @@ private slots:
     void on_opamp1GainSlider_valueChanged(int value);
 
     void on_opamp2GainSlider_valueChanged(int value);
+    void rxParsedChanged(uint32_t rxParsed);
+    void rxErrorsChanged(uint32_t rxErrors);
 
 private:
     Ui::MainWindow *ui;

@@ -46,8 +46,16 @@ void Device::consumeData()
 {
     auto data = handle->serialPort->readAll();
     for (auto b : data) {
-        if (parser.parseByte(b) == ComParser::NEW_MESSAGE) {
+        ComParser::ParseState result = parser.parseByte(b);
+        if (result == ComParser::NEW_MESSAGE) {
+            rxParsed++;
+            emit rxParsedChanged(rxParsed);
+            emit rxErrorsChanged(parser.parser.errors);
+
             handleMessage(&parser.parser.rxMessage);
+        } else if (result == ComParser::ERROR) {
+            rxErrors++;
+            emit rxErrorsChanged(rxErrors);
         }
     }
 }

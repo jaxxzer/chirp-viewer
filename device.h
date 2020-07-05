@@ -60,6 +60,8 @@ public:
     uint8_t profile_data[0xffff];
 
     void request_profile();
+    uint32_t rxParsed = 0;
+    uint32_t rxErrors = 0;
 
 
 private:
@@ -73,6 +75,8 @@ signals:
     void deviceIdChanged(QString& deviceId);
     void hardwareRevisionChanged(QString& hardwareRevision);
     void newData(QVector<double>, QVector<double>);
+    void rxParsedChanged(uint32_t rxParsed);
+    void rxErrorsChanged(uint32_t rxErrors);
 };
 
 #endif // DEVICE_H

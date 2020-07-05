@@ -34,8 +34,8 @@
           <property name="sizeConstraint">
            <enum>QLayout::SetMinimumSize</enum>
           </property>
-          <item row="0" column="0">
-           <widget class="QLabel" name="label">
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_5">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
               <horstretch>0</horstretch>
@@ -43,12 +43,12 @@
              </sizepolicy>
             </property>
             <property name="text">
-             <string>device id</string>
+             <string>protocol rev.</string>
             </property>
            </widget>
           </item>
-          <item row="0" column="1">
-           <widget class="QLabel" name="label_6">
+          <item row="2" column="1">
+           <widget class="QLabel" name="label_8">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
               <horstretch>0</horstretch>
@@ -73,6 +73,39 @@
             </property>
            </widget>
           </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="label_9">
+            <property name="text">
+             <string>rx packets</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLabel" name="label_6">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>device id</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="label">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>device id</string>
+            </property>
+           </widget>
+          </item>
           <item row="1" column="1">
            <widget class="QLabel" name="label_7">
             <property name="sizePolicy">
@@ -86,29 +119,24 @@
             </property>
            </widget>
           </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="label_5">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
+          <item row="3" column="1">
+           <widget class="QLabel" name="rxParsedLabel">
             <property name="text">
-             <string>protocol rev.</string>
+             <string>TextLabel</string>
             </property>
            </widget>
           </item>
-          <item row="2" column="1">
-           <widget class="QLabel" name="label_8">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
+          <item row="4" column="0">
+           <widget class="QLabel" name="label_13">
             <property name="text">
-             <string>device id</string>
+             <string>rx errors</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <widget class="QLabel" name="rxErrorsLabel">
+            <property name="text">
+             <string>TextLabel</string>
             </property>
            </widget>
           </item>
@@ -152,10 +180,10 @@
                <number>140000</number>
               </property>
               <property name="singleStep">
-               <number>1000</number>
+               <number>500</number>
               </property>
               <property name="pageStep">
-               <number>1000</number>
+               <number>500</number>
               </property>
               <property name="value">
                <number>90000</number>
@@ -201,10 +229,10 @@
                <number>160000</number>
               </property>
               <property name="singleStep">
-               <number>1000</number>
+               <number>500</number>
               </property>
               <property name="pageStep">
-               <number>1000</number>
+               <number>500</number>
               </property>
               <property name="tracking">
                <bool>false</bool>
@@ -244,10 +272,13 @@
                <number>50</number>
               </property>
               <property name="maximum">
-               <number>900</number>
+               <number>1625</number>
               </property>
               <property name="singleStep">
                <number>1</number>
+              </property>
+              <property name="pageStep">
+               <number>100</number>
               </property>
               <property name="tracking">
                <bool>false</bool>
@@ -288,6 +319,12 @@
               </property>
               <property name="maximum">
                <number>65000</number>
+              </property>
+              <property name="singleStep">
+               <number>500</number>
+              </property>
+              <property name="pageStep">
+               <number>1000</number>
               </property>
               <property name="tracking">
                <bool>false</bool>
@@ -383,6 +420,9 @@
               <property name="maximum">
                <number>3</number>
               </property>
+              <property name="pageStep">
+               <number>1</number>
+              </property>
               <property name="tracking">
                <bool>false</bool>
               </property>
@@ -419,6 +459,9 @@
              <widget class="QSlider" name="opamp2GainSlider">
               <property name="maximum">
                <number>3</number>
+              </property>
+              <property name="pageStep">
+               <number>1</number>
               </property>
               <property name="tracking">
                <bool>false</bool>

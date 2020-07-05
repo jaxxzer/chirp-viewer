@@ -38,7 +38,8 @@ void MainWindow::on_serialConnectButton_clicked()
                     device = new Device(availablePort);
                     connect(device, &Device::newData, this, &MainWindow::plotProfile);
                     connect(device, &Device::closed, this, &MainWindow::deviceClosed);
-
+                    connect(device, &Device::rxParsedChanged, this, &MainWindow::rxParsedChanged);
+                    connect(device, &Device::rxErrorsChanged, this, &MainWindow::rxErrorsChanged);
                     if (device->open()) {
                         ui->label->setText(availablePort.portName());
                         ui->serialConnectButton->setText("disconnect");
@@ -94,7 +95,9 @@ void MainWindow::onPortScanFinished(QList<QSerialPortInfo> availablePorts)
 {
     ui->serialComboBox->clear();
     for (auto portInfo : availablePorts) {
-        ui->serialComboBox->addItem(portInfo.portName());
+        if (portInfo.portName().contains("USB")) {
+            ui->serialComboBox->addItem(portInfo.portName());
+        }
     }
 }
 
@@ -126,4 +129,14 @@ void MainWindow::on_opamp1GainSlider_valueChanged(int value)
 void MainWindow::on_opamp2GainSlider_valueChanged(int value)
 {
     device->setOpamp2Gain(value);
+}
+
+void MainWindow::rxParsedChanged(uint32_t rxParsed)
+{
+    ui->rxParsedLabel->setNum((int)rxParsed);
+}
+
+void MainWindow::rxErrorsChanged(uint32_t rxErrors)
+{
+    ui->rxErrorsLabel->setNum((int)rxErrors);
 }
