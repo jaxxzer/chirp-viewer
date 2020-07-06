@@ -99,15 +99,16 @@ void Device::handleMessage(ping_message* message)
     case PingchirpId::CHIRP_DATA:
     {
         pingchirp_chirp_data* msg = (pingchirp_chirp_data*)message;
-        QVector<double> keys(msg->data_length());
+        QVector<double> keys(msg->nsamples());
         float Ts = 1/300000.0;
         float Dn = 343*Ts/2;
-        QVector<double> data(msg->data_length());
-        for (uint16_t i = 3; i < msg->data_length(); i++) {
+        QVector<double> data(msg->nsamples());
+        for (uint16_t i = 3; i < msg->nsamples(); i++) {
             keys[i] = i*Dn;
 //            data[i] = (msg->data()[i] + msg->data()[i-1] + msg->data()[i-2]+msg->data()[i-3])/4;
             data[i] = msg->data()[i];
         }
+        data_length = msg->data_length();
         nsamples = msg->nsamples();
         f0 = msg->f0();
         f1 = msg->f1();

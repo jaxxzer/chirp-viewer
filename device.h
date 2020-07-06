@@ -60,7 +60,9 @@ public:
     uint16_t dc_bias;
     uint32_t nsamples;
     uint8_t window;
+    uint16_t data_length;
     uint8_t profile_data[0xffff];
+
 
     void request_profile();
     uint32_t rxParsed = 0;
