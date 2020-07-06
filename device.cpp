@@ -81,6 +81,9 @@ void Device::ping()
     m.set_opamp2(opamp2_gain);
     m.set_f0(f0);
     m.set_f1(f1);
+    m.set_waveform(window);
+    m.set_adc_resolution(adc_resolution);
+    m.set_adc_sample_time(adc_sample_time);
     m.updateChecksum();
     writeMessage(m);
 }
@@ -100,8 +103,9 @@ void Device::handleMessage(ping_message* message)
         float Ts = 1/300000.0;
         float Dn = 343*Ts/2;
         QVector<double> data(msg->data_length());
-        for (uint16_t i = 0; i < msg->data_length(); i++) {
+        for (uint16_t i = 3; i < msg->data_length(); i++) {
             keys[i] = i*Dn;
+//            data[i] = (msg->data()[i] + msg->data()[i-1] + msg->data()[i-2]+msg->data()[i-3])/4;
             data[i] = msg->data()[i];
         }
         nsamples = msg->nsamples();
@@ -110,7 +114,9 @@ void Device::handleMessage(ping_message* message)
         pulse_duration = msg->pulse_duration();
         opamp1_gain = msg->opamp1();
         opamp2_gain = msg->opamp2();
-
+        window = msg->waveform();
+        adc_resolution = msg->adc_resolution();
+        adc_sample_time = msg->adc_sample_time();
         emit newData(keys, data);
         break;
     }

@@ -12,6 +12,24 @@ MainWindow::MainWindow(QWidget *parent)
     , connectState(CONNECT)
 {
     ui->setupUi(this);
+    ui->adcResolutionComboBox->addItem("12 bit");
+    ui->adcResolutionComboBox->addItem("10 bit");
+    ui->adcResolutionComboBox->addItem("8 bit");
+
+    ui->adcSampleTimeComboBox->addItem("1.5 cycles");
+    ui->adcSampleTimeComboBox->addItem("2.5 cycles");
+    ui->adcSampleTimeComboBox->addItem("4.5 cycles");
+    ui->adcSampleTimeComboBox->addItem("7.5 cycles");
+    ui->adcSampleTimeComboBox->addItem("19.5 cycles");
+    ui->adcSampleTimeComboBox->addItem("61.5 cycles");
+    ui->adcSampleTimeComboBox->addItem("181.5.5 cycles");
+    ui->adcSampleTimeComboBox->addItem("601.5 cycles");
+
+    ui->windowComboBox->addItem("rectangular");
+    ui->windowComboBox->addItem("hanning");
+    ui->windowComboBox->addItem("hamming");
+
+
 
     connect(&portScanner, &PortScanner::scanUpdate, this, &MainWindow::onPortScanFinished);
     portScanner.startScanning(500);
@@ -88,7 +106,9 @@ void MainWindow::plotProfile(QVector<double> keys, QVector<double> data)
     ui->pulseDurationLabel->setNum(device->pulse_duration);
     ui->opamp1GainLabel->setNum(pow(2, device->opamp1_gain+1));
     ui->opamp2GainLabel->setNum(pow(2, device->opamp2_gain+1));
-
+    ui->adcResolutionLabel->setNum(device->adc_resolution);
+    ui->adcSampleTimeLabel->setNum(device->adc_sample_time);
+    ui->windowLabel->setNum(device->window);
 }
 
 void MainWindow::onPortScanFinished(QList<QSerialPortInfo> availablePorts)
@@ -139,4 +159,19 @@ void MainWindow::rxParsedChanged(uint32_t rxParsed)
 void MainWindow::rxErrorsChanged(uint32_t rxErrors)
 {
     ui->rxErrorsLabel->setNum((int)rxErrors);
+}
+
+void MainWindow::on_windowComboBox_activated(int index)
+{
+    device->setWindow(index);
+}
+
+void MainWindow::on_adcSampleTimeComboBox_activated(int index)
+{
+    device->setAdcSampleTime(index);
+}
+
+void MainWindow::on_adcResolutionComboBox_activated(int index)
+{
+    device->setAdcResolution(index);
 }

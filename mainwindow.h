@@ -51,6 +51,12 @@ private slots:
     void rxParsedChanged(uint32_t rxParsed);
     void rxErrorsChanged(uint32_t rxErrors);
 
+    void on_windowComboBox_activated(int index);
+
+    void on_adcSampleTimeComboBox_activated(int index);
+
+    void on_adcResolutionComboBox_activated(int index);
+
 private:
     Ui::MainWindow *ui;
 

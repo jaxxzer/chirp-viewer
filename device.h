@@ -41,7 +41,9 @@ public:
     void setOpamp2Gain(int n) { opamp2_gain = n; ping(); };
     void setF0(int n) { f0 = n; ping(); };
     void setF1(int n) { f1 = n; ping(); };
-
+    void setWindow(int n) { window = n; ping(); };
+    void setAdcSampleTime(int n) { adc_sample_time = n; ping(); };
+    void setAdcResolution(int n) { adc_resolution = n; ping(); };
     uint32_t cpu_frequency;
     uint32_t timer_frequency;
     uint16_t duty;
@@ -57,6 +59,7 @@ public:
     uint16_t digital_gain;
     uint16_t dc_bias;
     uint32_t nsamples;
+    uint8_t window;
     uint8_t profile_data[0xffff];
 
     void request_profile();
