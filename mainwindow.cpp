@@ -10,6 +10,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
     , device(nullptr)
     , connectState(CONNECT)
+    , colorMap(ui->waterfall->xAxis, ui->waterfall->yAxis)
 {
     ui->setupUi(this);
     ui->adcResolutionComboBox->addItem("12 bit");
@@ -32,10 +33,14 @@ MainWindow::MainWindow(QWidget *parent)
 
 
     connect(&portScanner, &PortScanner::scanUpdate, this, &MainWindow::onPortScanFinished);
-    portScanner.startScanning(500);
+    portScanner.startScanning(2000);
 
     ui->customPlot->addGraph()->setVisible(true);
     ui->customPlot->graph()->setAdaptiveSampling(true);
+
+    colorMap->data()->setSize(1000, 0xffff);
+    colorMap->data()-?setRange(QCPRange(0, 1000), )
+
 }
 
 MainWindow::~MainWindow()
